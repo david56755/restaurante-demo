@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trattoria Bella – Auténtica Cocina Italiana en CDMX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0705;--bg2:#120D09;--card:#1C130F;
+  --p:#C53030;--g:#D69E2E;--gd:#B7791F;
+  --w:#fff;--txt:#FFF5EB;--mu:#A8927A;--bord:rgba(255,255,255,.07);
+  --grad:linear-gradient(135deg,#C53030,#D69E2E);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;line-height:1.6;overflow-x:hidden}
+
+/* ── PROGRESS BAR ── */
+#progress{position:fixed;top:0;left:0;height:3px;width:0%;background:var(--grad);z-index:9999;transition:width .1s linear}
+
+/* ── NAV ── */
+nav{position:fixed;top:3px;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:1rem 5%;background:rgba(10,7,5,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--bord);transition:all .3s}
+nav.scrolled{padding:.7rem 5%;background:rgba(10,7,5,.97)}
+.nav-logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.nav-logo span.icon{font-size:1.4rem}
+.nav-logo span.name{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--txt);letter-spacing:.03em}
+.nav-logo span.name em{color:var(--g);font-style:normal}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--mu);font-size:.9rem;font-weight:500;letter-spacing:.04em;transition:color .25s}
+.nav-links a:hover{color:var(--g)}
+.nav-cta{background:var(--grad);color:#fff;padding:.55rem 1.3rem;border-radius:6px;font-size:.85rem;font-weight:600;letter-spacing:.06em;text-decoration:none;text-transform:uppercase;transition:opacity .25s,transform .2s;white-space:nowrap}
+.nav-cta:hover{opacity:.85;transform:translateY(-1px)}
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.nav-toggle span{display:block;width:24px;height:2px;background:var(--txt);border-radius:2px;transition:all .3s}
+@media(max-width:768px){
+  .nav-links{display:none;flex-direction:column;position:fixed;top:60px;left:0;right:0;background:rgba(10,7,5,.97);padding:1.5rem 5%;gap:1.2rem;border-bottom:1px solid var(--bord)}
+  .nav-links.open{display:flex}
+  .nav-toggle{display:flex}
+}
+
+/* ── HERO ── */
+#hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:var(--bg)}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,7,5,.55) 0%,rgba(10,7,5,.75) 60%,rgba(10,7,5,1) 100%)}
+.hero-content{position:relative;z-index:2;max-width:760px;padding:0 1.5rem}
+.hero-badge{display:inline-block;background:rgba(214,158,46,.15);border:1px solid rgba(214,158,46,.35);color:var(--g);font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:.4rem 1.1rem;border-radius:50px;margin-bottom:1.6rem}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,6vw,4.8rem);font-weight:700;line-height:1.1;color:var(--txt);margin-bottom:1.2rem}
+.hero-title em{font-style:italic;color:var(--g)}
+.hero-sub{color:var(--mu);font-size:1.1rem;max-width:500px;margin:0 auto 2.2rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--grad);color:#fff;padding:.8rem 1.8rem;border-radius:8px;font-weight:600;font-size:.95rem;text-decoration:none;letter-spacing:.05em;transition:opacity .25s,transform .2s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-primary:hover{opacity:.85;transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--txt);padding:.8rem 1.8rem;border-radius:8px;font-weight:500;font-size:.95rem;text-decoration:none;border:1px solid rgba(255,245,235,.25);letter-spacing:.05em;transition:all .25s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-outline:hover{border-color:var(--g);color:var(--g)}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:.4rem;color:var(--mu);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;animation:bob 2s ease-in-out infinite}
+.hero-scroll::after{content:'';display:block;width:1px;height:40px;background:linear-gradient(to bottom,var(--mu),transparent)}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ── SECTIONS SHARED ── */
+section{padding:6rem 5%}
+.section-label{display:inline-block;color:var(--g);font-size:.8rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.8rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;line-height:1.2;color:var(--txt);margin-bottom:1rem}
+.section-line{width:60px;height:3px;background:var(--grad);border-radius:2px;margin-bottom:2rem}
+.rev{opacity:0;transform:translateY(36px)}
+
+/* ── NOSOTROS ── */
+#nosotros{background:var(--bg2)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;max-width:1100px;margin:0 auto}
+.about-text p{color:var(--mu);line-height:1.9;margin-bottom:1.4rem}
+.stats-row{display:flex;gap:2.5rem;margin-top:2rem;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--g);line-height:1}
+.stat-lab{font-size:.8rem;color:var(--mu);letter-spacing:.08em;text-transform:uppercase;margin-top:.3rem}
+.about-visual{display:flex;flex-direction:column;gap:1.5rem}
+.quote-card{background:var(--card);border:1px solid var(--bord);border-left:4px solid var(--g);border-radius:12px;padding:2rem 2rem 1.8rem;position:relative}
+.quote-card::before{content:'"';font-family:'Playfair Display',serif;font-size:6rem;color:var(--g);opacity:.18;position:absolute;top:-1rem;left:1rem;line-height:1}
+.quote-card p{font-family:'Playfair Display',serif;font-style:italic;color:var(--txt);font-size:1.1rem;line-height:1.75;position:relative;z-index:1}
+.quote-card cite{display:block;margin-top:1rem;color:var(--mu);font-size:.85rem;font-style:normal}
+.chef-card{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.2rem}
+.chef-icon{width:58px;height:58px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0}
+.chef-info h4{font-family:'Playfair Display',serif;font-size:1rem;color:var(--txt);margin-bottom:.2rem}
+.chef-info p{font-size:.85rem;color:var(--mu)}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr;gap:2.5rem}}
+
+/* ── MENÚ ── */
+#menu{background:var(--bg)}
+.menu-inner{max-width:1100px;margin:0 auto}
+.menu-header{text-align:center;margin-bottom:3rem}
+.menu-header .section-line{margin:0 auto 2rem}
+.tab-btns{display:flex;justify-content:center;gap:.8rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.tab-btn{background:transparent;border:1px solid var(--bord);color:var(--mu);padding:.6rem 1.6rem;border-radius:50px;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .25s;font-family:'Inter',sans-serif;letter-spacing:.04em}
+.tab-btn.active{background:var(--grad);border-color:transparent;color:#fff}
+.tab-btn:hover:not(.active){border-color:var(--g);color:var(--g)}
+.menu-panel{display:none;animation:fadeIn .35s ease}
+.menu-panel.active{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.4rem}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.dish-card{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:1.6rem;transition:transform .25s,border-color .25s;position:relative;overflow:hidden}
+.dish-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.dish-card:hover{transform:translateY(-4px);border-color:rgba(214,158,46,.25)}
+.dish-card:hover::after{transform:scaleX(1)}
+.dish-emoji{font-size:2rem;margin-bottom:.8rem;display:block}
+.dish-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;color:var(--txt);margin-bottom:.5rem}
+.dish-desc{font-size:.85rem;color:var(--mu);line-height:1.6;margin-bottom:1rem}
+.dish-price{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--g)}
+.dish-price::before{content:'$';font-size:.9rem;margin-right:.1rem;opacity:.7}
+
+/* ── GALERÍA ── */
+#galeria{background:var(--bg2)}
+.gallery-inner{max-width:1100px;margin:0 auto}
+.gallery-header{text-align:center;margin-bottom:3rem}
+.gallery-header .section-line{margin:0 auto 0}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,220px);gap:1rem}
+.gallery-item{background:var(--card);border:1px solid var(--bord);border-radius:12px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:pointer}
+.gallery-item:nth-child(1){grid-column:span 2}
+.gallery-item:nth-child(5){grid-column:span 2}
+.gallery-emoji{font-size:3.5rem;transition:transform .35s}
+.gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,7,5,.92) 0%,rgba(10,7,5,.4) 60%,transparent 100%);opacity:0;transition:opacity .35s;display:flex;align-items:flex-end;padding:1.5rem}
+.gallery-overlay p{color:var(--txt);font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;transform:translateY(12px);transition:transform .35s}
+.gallery-item:hover .gallery-emoji{transform:scale(1.15)}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-item:hover .gallery-overlay p{transform:translateY(0)}
+@media(max-width:768px){
+  .gallery-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:auto}
+  .gallery-item:nth-child(1),.gallery-item:nth-child(5){grid-column:span 1}
+}
+
+/* ── RESERVACIONES ── */
+#reservar{background:var(--bg)}
+.reservar-inner{max-width:780px;margin:0 auto;text-align:center}
+.reservar-card{background:var(--card);border:1px solid var(--bord);border-radius:16px;padding:3.5rem 3rem;position:relative;overflow:hidden}
+.reservar-card::before{content:'';position:absolute;top:-80px;right:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(197,48,48,.18),transparent 70%)}
+.reservar-card::after{content:'';position:absolute;bottom:-60px;left:-60px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(214,158,46,.12),transparent 70%)}
+.reservar-card .section-line{margin:0 auto 1.5rem}
+.reservar-card p{color:var(--mu);max-width:480px;margin:0 auto 2.2rem;line-height:1.75}
+.wa-btn{display:inline-flex;align-items:center;gap:.75rem;background:#25D366;color:#fff;padding:.9rem 2rem;border-radius:10px;font-weight:600;font-size:1rem;text-decoration:none;letter-spacing:.04em;transition:all .25s;margin-bottom:1.5rem}
+.wa-btn:hover{background:#1ebe5d;transform:translateY(-2px)}
+.wa-btn .wa-icon{font-size:1.4rem}
+.phone-display{display:flex;align-items:center;justify-content:center;gap:.6rem;color:var(--mu);font-size:.95rem}
+.phone-display a{color:var(--g);text-decoration:none;font-weight:600}
+.phone-display a:hover{text-decoration:underline}
+@media(max-width:768px){.reservar-card{padding:2.5rem 1.5rem}}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--bord);padding:3.5rem 5% 2rem}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:3rem;max-width:1100px;margin:0 auto;padding-bottom:2.5rem;border-bottom:1px solid var(--bord)}
+.footer-logo{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;text-decoration:none}
+.footer-logo span.name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--txt)}
+.footer-logo span.name em{color:var(--g);font-style:normal}
+.footer-brand p{color:var(--mu);font-size:.9rem;line-height:1.7;max-width:260px;margin-bottom:1.2rem}
+.social-links{display:flex;gap:.8rem}
+.social-links a{width:38px;height:38px;border-radius:8px;background:var(--card);border:1px solid var(--bord);display:flex;align-items:center;justify-content:center;font-size:1.1rem;text-decoration:none;transition:all .25s}
+.social-links a:hover{border-color:var(--g);transform:translateY(-2px)}
+.footer-col h4{font-family:'Playfair Display',serif;color:var(--txt);font-size:1rem;margin-bottom:1.2rem}
+.footer-col ul{list-style:none}
+.footer-col ul li{color:var(--mu);font-size:.9rem;margin-bottom:.6rem;display:flex;align-items:flex-start;gap:.5rem}
+.footer-col ul li .fi{flex-shrink:0;margin-top:.1rem}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:1.5rem auto 0;color:var(--mu);font-size:.82rem;flex-wrap:wrap;gap:.5rem}
+.footer-bottom a{color:var(--mu);text-decoration:none}
+.footer-bottom a:hover{color:var(--g)}
+@media(max-width:768px){
+  .footer-grid{grid-template-columns:1fr;gap:2rem}
+  .footer-bottom{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <span class="icon">🍴</span>
+    <span class="name">Trattoria <em>Bella</em></span>
+  </a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#reservar">Reservar</a></li>
+    <li><a href="https://wa.me/525555000000?text=Hola!%20Quiero%20reservar%20una%20mesa%20en%20Trattoria%20Bella" target="_blank" rel="noopener noreferrer" class="nav-cta">Reservar Mesa</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Polanco · Ciudad de México</div>
+    <h1 class="hero-title">Auténtica <em>cocina</em><br>italiana</h1>
+    <p class="hero-sub">Tradición, sabor y pasión en cada plato. Una experiencia gastronómica que transporta tu paladar directo a Italia.</p>
+    <div class="hero-btns">
+      <a href="https://wa.me/525555000000?text=Hola!%20Quiero%20reservar%20una%20mesa%20en%20Trattoria%20Bella" target="_blank" rel="noopener noreferrer" class="btn-primary">🍽️ Reservar Mesa</a>
+      <a href="#menu" class="btn-outline">📖 Ver Menú</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Explorar</div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="about-grid">
+    <div class="about-text rev">
+      <span class="section-label">Nuestra historia</span>
+      <h2 class="section-title">Donde la tradición<br>se convierte en arte</h2>
+      <div class="section-line"></div>
+      <p>Nacimos del amor por la cocina auténtica italiana y el deseo de traer a la Ciudad de México los sabores genuinos de las nonnas de Nápoles, Roma y Sicilia. Cada ingrediente es seleccionado con cuidado, cada receta perfeccionada con el tiempo.</p>
+      <p>Nuestro chef, Marco Rossi, llegó a México en 2009 con una maleta llena de recetas familiares y un sueño: compartir la verdadera cultura gastronómica italiana con el mundo.</p>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-num">15</div>
+          <div class="stat-lab">años de tradición</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-lab">ingredientes frescos</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">1</div>
+          <div class="stat-lab">chef italiano</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual rev">
+      <div class="quote-card">
+        <p>La cocina italiana no es simplemente comida; es una conversación entre generaciones, un abrazo cálido hecho de harina, tomate y amor verdadero.</p>
+        <cite>— Marco Rossi, Chef & Fundador</cite>
+      </div>
+      <div class="chef-card">
+        <div class="chef-icon">👨‍🍳</div>
+        <div class="chef-info">
+          <h4>Marco Rossi</h4>
+          <p>Chef Ejecutivo · Nápoles, Italia · 20+ años de experiencia</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENÚ -->
+<section id="menu">
+  <div class="menu-inner">
+    <div class="menu-header rev">
+      <span class="section-label">Nuestra carta</span>
+      <h2 class="section-title">Un viaje por Italia</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="tab-btns rev">
+      <button class="tab-btn active" data-tab="entradas">🥗 Entradas</button>
+      <button class="tab-btn" data-tab="principales">🍝 Platos Principales</button>
+      <button class="tab-btn" data-tab="postres">🍮 Postres</button>
+    </div>
+
+    <div class="menu-panel active" id="tab-entradas">
+      <div class="dish-card">
+        <span class="dish-emoji">🍅</span>
+        <div class="dish-name">Bruschetta al Pomodoro</div>
+        <div class="dish-desc">Pan de campo tostado con tomate cherry, albahaca fresca, ajo y un hilo de aceite de oliva extra virgen.</div>
+        <div class="dish-price">95</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🥩</span>
+        <div class="dish-name">Carpaccio di Manzo</div>
+        <div class="dish-desc">Finas láminas de res premium marinadas con limón, alcaparras, rúcula y virutas de parmigiano.</div>
+        <div class="dish-price">165</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🧀</span>
+        <div class="dish-name">Burrata con Prosciutto</div>
+        <div class="dish-desc">Cremosa burrata importada servida con prosciutto di Parma, higos caramelizados y reducción de balsámico.</div>
+        <div class="dish-price">195</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🥣</span>
+        <div class="dish-name">Zuppa di Verdure</div>
+        <div class="dish-desc">Sopa rústica de verduras de temporada, legumbres, romero fresco y pan toscano artesanal.</div>
+        <div class="dish-price">85</div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="tab-principales">
+      <div class="dish-card">
+        <span class="dish-emoji">🍝</span>
+        <div class="dish-name">Spaghetti Carbonara</div>
+        <div class="dish-desc">Spaghetti de semolina con guanciale crujiente, yema de huevo, pecorino romano y pimienta negra al gusto.</div>
+        <div class="dish-price">245</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍚</span>
+        <div class="dish-name">Risotto ai Funghi Porcini</div>
+        <div class="dish-desc">Arroz arborio cremoso con hongos porcini importados, trufa blanca, mantequilla y parmigiano reggiano.</div>
+        <div class="dish-price">285</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍗</span>
+        <div class="dish-name">Pollo alla Parmigiana</div>
+        <div class="dish-desc">Pechuga empanizada con salsa de tomate san marzano, mozzarella fundida y albahaca del huerto.</div>
+        <div class="dish-price">275</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🐟</span>
+        <div class="dish-name">Branzino al Limone</div>
+        <div class="dish-desc">Lubina del mediterráneo a la parrilla con mantequilla de limón, alcaparras, verduras asadas y papas al romero.</div>
+        <div class="dish-price">350</div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="tab-postres">
+      <div class="dish-card">
+        <span class="dish-emoji">☕</span>
+        <div class="dish-name">Tiramisú della Nonna</div>
+        <div class="dish-desc">La receta original de la nonna Rossi: savoiardi remojados en espresso, mascarpone sedoso y cacao amargo.</div>
+        <div class="dish-price">115</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍮</span>
+        <div class="dish-name">Panna Cotta</div>
+        <div class="dish-desc">Delicada crema italiana con coulis de frutos rojos silvestres y menta fresca. Suave como una nube.</div>
+        <div class="dish-price">95</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🥐</span>
+        <div class="dish-name">Cannoli Siciliani</div>
+        <div class="dish-desc">Cannoli crujientes rellenos al momento con ricotta dulce, pistache de Bronte, naranja confitada y chocolate.</div>
+        <div class="dish-price">105</div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍨</span>
+        <div class="dish-name">Gelato Artigianale</div>
+        <div class="dish-desc">Dos bolas de gelato artesanal elaborado en casa. Sabores del día: pistache, stracciatella o frutti di bosco.</div>
+        <div class="dish-price">85</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section id="galeria">
+  <div class="gallery-inner">
+    <div class="gallery-header rev">
+      <span class="section-label">Galería</span>
+      <h2 class="section-title">Momentos inolvidables</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="gallery-grid rev">
+      <div class="gallery-item">
+        <span class="gallery-emoji">🍝</span>
+        <div class="gallery-overlay"><p>Pasta fresca elaborada a diario</p></div>
+      </div>
+      <div class="gallery-item">
+        <span class="gallery-emoji">🍷</span>
+        <div class="gallery-overlay"><p>Bodega con más de 80 etiquetas italianas</p></div>
+      </div>
+      <div class="gallery-item">
+        <span class="gallery-emoji">🍕</span>
+        <div class="gallery-overlay"><p>Pizza napolitana en horno de leña</p></div>
+      </div>
+      <div class="gallery-item">
+        <span class="gallery-emoji">🫒</span>
+        <div class="gallery-overlay"><p>Ingredientes importados de Italia</p></div>
+      </div>
+      <div class="gallery-item">
+        <span class="gallery-emoji">🥂</span>
+        <div class="gallery-overlay"><p>El espacio perfecto para celebrar</p></div>
+      </div>
+      <div class="gallery-item">
+        <span class="gallery-emoji">☕</span>
+        <div class="gallery-overlay"><p>Espresso y dolci para terminar la velada</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVACIONES -->
+<section id="reservar">
+  <div class="reservar-inner">
+    <div class="reservar-card rev">
+      <span class="section-label">Reservaciones</span>
+      <h2 class="section-title">¿Listo para vivir<br>la experiencia?</h2>
+      <div class="section-line"></div>
+      <p>Reserva tu mesa fácilmente vía WhatsApp. Nuestro equipo confirmará tu reservación en menos de 30 minutos. Para grupos mayores de 10 personas, contáctanos directamente.</p>
+      <div>
+        <a href="https://wa.me/525555000000?text=Hola!%20Quiero%20reservar%20una%20mesa%20en%20Trattoria%20Bella" target="_blank" rel="noopener noreferrer" class="wa-btn">
+          <span class="wa-icon">💬</span>
+          Reservar por WhatsApp
+        </a>
+      </div>
+      <div class="phone-display">
+        <span>📞 También puedes llamarnos:</span>
+        <a href="tel:+525555000000">+52 55 5500 0000</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#hero" class="footer-logo">
+        <span style="font-size:1.2rem">🍴</span>
+        <span class="name">Trattoria <em>Bella</em></span>
+      </a>
+      <p>Auténtica cocina italiana en el corazón de Polanco. Una experiencia que despertará todos tus sentidos.</p>
+      <div class="social-links">
+        <a href="#" target="_blank" rel="noopener noreferrer" title="Instagram">📸</a>
+        <a href="#" target="_blank" rel="noopener noreferrer" title="Facebook">📘</a>
+        <a href="#" target="_blank" rel="noopener noreferrer" title="TikTok">🎵</a>
+        <a href="https://wa.me/525555000000" target="_blank" rel="noopener noreferrer" title="WhatsApp">💬</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Visítanos</h4>
+      <ul>
+        <li><span class="fi">📍</span>Presidente Masaryk 123,<br>Polanco, CDMX, 11560</li>
+        <li><span class="fi">🕐</span>Lun – Dom: 1:00 pm – 11:00 pm</li>
+        <li><span class="fi">📞</span><a href="tel:+525555000000" style="color:var(--g);text-decoration:none">+52 55 5500 0000</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="#nosotros" style="color:var(--mu);text-decoration:none">Nosotros</a></li>
+        <li><a href="#menu" style="color:var(--mu);text-decoration:none">Menú</a></li>
+        <li><a href="#galeria" style="color:var(--mu);text-decoration:none">Galería</a></li>
+        <li><a href="#reservar" style="color:var(--mu);text-decoration:none">Reservaciones</a></li>
+        <li><a href="https://wa.me/525555000000?text=Hola!%20Quiero%20reservar%20una%20mesa%20en%20Trattoria%20Bella" target="_blank" rel="noopener noreferrer" style="color:var(--g);text-decoration:none">Reservar Mesa →</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Trattoria Bella. Todos los derechos reservados.</span>
+    <span>Hecho con ❤️ en CDMX</span>
+  </div>
+</footer>
+
+<!-- GSAP 3.12.5 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  /* ── SCROLL PROGRESS BAR ── */
+  const bar = document.getElementById('progress');
+  window.addEventListener('scroll', function(){
+    const s = document.documentElement;
+    const pct = s.scrollTop / (s.scrollHeight - s.clientHeight) * 100;
+    bar.style.width = pct + '%';
+  }, {passive:true});
+
+  /* ── NAV SCROLL STATE ── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', function(){
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }, {passive:true});
+
+  /* ── MOBILE NAV TOGGLE ── */
+  const toggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  toggle.addEventListener('click', function(){
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){navLinks.classList.remove('open');});
+  });
+
+  /* ── HERO CANVAS PARTICLES ── */
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  const EMOJIS = ['🍝','🍕','🥂','🫒','🍷','🧀','🍅','☕'];
+  let W, H, particles = [];
+
+  function resize(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function Particle(){
+    this.reset(true);
+  }
+  Particle.prototype.reset = function(init){
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 60;
+    this.emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+    this.size = 18 + Math.random() * 22;
+    this.vy = -(0.18 + Math.random() * 0.28);
+    this.vx = (Math.random() - 0.5) * 0.22;
+    this.alpha = 0.04 + Math.random() * 0.14;
+    this.wobble = Math.random() * Math.PI * 2;
+    this.wobbleSpeed = 0.008 + Math.random() * 0.012;
+    this.wobbleAmp = 0.3 + Math.random() * 0.6;
+  };
+  Particle.prototype.update = function(){
+    this.wobble += this.wobbleSpeed;
+    this.x += this.vx + Math.sin(this.wobble) * this.wobbleAmp;
+    this.y += this.vy;
+    if(this.y < -80) this.reset(false);
+  };
+  Particle.prototype.draw = function(){
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.font = this.size + 'px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(this.emoji, this.x, this.y);
+    ctx.restore();
+  };
+
+  function initParticles(){
+    particles = [];
+    const count = Math.min(28, Math.floor(W / 45));
+    for(let i = 0; i < count; i++) particles.push(new Particle());
+  }
+
+  function animate(){
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(function(p){ p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+
+  resize();
+  initParticles();
+  animate();
+  window.addEventListener('resize', function(){ resize(); initParticles(); });
+
+  /* ── GSAP HERO ENTRANCE ── */
+  gsap.registerPlugin(ScrollTrigger);
+
+  const heroTl = gsap.timeline({delay:.25});
+  heroTl
+    .from('.hero-badge', {opacity:0, y:20, duration:.6, ease:'power2.out'})
+    .from('.hero-title', {opacity:0, y:30, duration:.7, ease:'power2.out'}, '-=.3')
+    .from('.hero-sub',   {opacity:0, y:20, duration:.6, ease:'power2.out'}, '-=.35')
+    .from('.hero-btns',  {opacity:0, y:20, duration:.6, ease:'power2.out'}, '-=.3')
+    .from('.hero-scroll',{opacity:0, duration:.5}, '-=.1');
+
+  /* ── GSAP SCROLL REVEAL ── */
+  gsap.utils.toArray('.rev').forEach(function(el){
+    gsap.fromTo(el,
+      {opacity:0, y:40},
+      {opacity:1, y:0, duration:.85, ease:'power2.out',
+        scrollTrigger:{trigger:el, start:'top 88%', toggleActions:'play none none none'}
+      }
+    );
+  });
+
+  /* ── MENU TABS ── */
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.menu-panel');
+
+  tabBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const target = btn.dataset.tab;
+      tabBtns.forEach(function(b){ b.classList.remove('active'); });
+      tabPanels.forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      const panel = document.getElementById('tab-' + target);
+      if(panel) panel.classList.add('active');
+    });
+  });
+
+  /* ── NAV ACTIVE HIGHLIGHT ON SCROLL ── */
+  const sections = document.querySelectorAll('section[id]');
+  const navAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
+  window.addEventListener('scroll', function(){
+    let current = '';
+    sections.forEach(function(sec){
+      if(window.scrollY >= sec.offsetTop - 120) current = sec.id;
+    });
+    navAnchors.forEach(function(a){
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--g)' : '';
+    });
+  }, {passive:true});
+
+})();
+</script>
+</body>
+</html>
